@@ -396,7 +396,7 @@ function swapBooks() {
 }
 
 function handleSearch(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
   
   if (!currentState.startBook || !currentState.endBook) return;
   
@@ -424,11 +424,11 @@ function handleSearch(e) {
     showStats(graphResult);
     updateURL();
 
-    const graphEl = document.getElementById('graph-container');
-    if (graphEl) {
-      graphEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    const graphContainer = document.getElementById('graph-container');
+    if (graphContainer) {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
-    
+
     currentState.isSearching = false;
     updateSearchButton();
   }, 50);
