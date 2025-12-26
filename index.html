@@ -1,0 +1,218 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Degrees of Books</title>
+  <link rel="stylesheet" href="src/css/styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="container">
+        <h1 class="title">Degrees of Books</h1>
+
+        <a href="https://github.com/aidan-labs/Degrees-of-Books" target="_blank" rel="noopener noreferrer" class="github-link">
+          GitHub
+        </a>
+
+        <a href="#" id="about-link" class="about-link">About</a>
+
+        <form id="search-form" class="search-form">
+          <div class="search-inputs">
+            <div class="inputs-row">
+              <div class="search-input-wrapper">
+                <div class="input-container">
+                  <svg class="search-icon" viewBox="0 0 24 24" fill="none" 
+                    stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                  </svg>
+                  <input 
+                    type="text" 
+                    id="start-input" 
+                    class="search-input" 
+                    placeholder="Start book..."
+                    autocomplete="off"
+                  >
+                  <button type="button" id="clear-start" class="clear-btn" 
+                    style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                      stroke-width="2">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+                <div id="start-dropdown" class="dropdown" 
+                  style="display: none;"></div>
+              </div>
+
+              <button type="button" id="swap-btn" class="swap-btn" 
+                title="Swap books">
+                <span class="material-symbols-outlined">sync_alt</span>
+              </button>
+
+              <div class="search-input-wrapper">
+                <div class="input-container">
+                  <svg class="search-icon" viewBox="0 0 24 24" fill="none" 
+                    stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                  </svg>
+                  <input 
+                    type="text" 
+                    id="end-input" 
+                    class="search-input" 
+                    placeholder="End book..."
+                    autocomplete="off"
+                  >
+                  <button type="button" id="clear-end" class="clear-btn" 
+                    style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                      stroke-width="2">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+                <div id="end-dropdown" class="dropdown" 
+                  style="display: none;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-container">
+            <div id="error-msg" class="error-message" 
+              style="display: none;"></div>
+            <div id="stats" class="stats" style="display: none;">
+              <div class="stat-item degrees-stat">
+                <span class="stat-text">
+                  <span id="degrees-count">0</span> degree<span 
+                    id="degree-plural">s</span>
+                </span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-text">
+                  <span id="explored-count">0</span> books explored
+                </span>
+              </div>
+            </div>
+            <div id="total-books" class="total-books-text" 
+              style="display: none;"></div>
+            
+            <button type="submit" id="submit-btn" class="submit-btn" disabled>
+              Go!
+            </button>
+          </div>
+        </form>
+      </div>
+    </header>
+
+    <main class="main">
+      <div id="graph-container" class="graph-container" 
+        style="display: none;">
+        <div class="graph-wrapper">
+          <svg id="graph-svg" class="graph-svg"></svg>
+          
+          <div id="tooltip" class="tooltip" style="display: none;"></div>
+
+          <button type="button" id="center-btn" class="center-btn" 
+            title="Center view">
+            <span class="material-symbols-outlined">recenter</span>
+          </button>
+
+          <button type="button" id="share-btn" class="copy-btn" 
+            title="Share path">
+            <span class="material-symbols-outlined">share</span>
+          </button>
+
+          <div class="legend">
+            <p class="legend-title">Degrees</p>
+            <div id="legend-items" class="legend-items"></div>
+          </div>
+
+          <div class="instructions">
+            Drag start/end nodes<br>Scroll to zoom
+          </div>
+        </div>
+      </div>
+
+      <div id="empty-state" class="empty-state">
+        <span class="empty-icon material-symbols-outlined">
+          conversion_path
+        </span>
+        <p class="empty-text">
+          Find the path between any two books by their similar books
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <div id="share-modal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Share</h2>
+        <button id="close-share-modal" class="icon-btn">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="modal-content">
+        <p id="share-path-text" class="share-path-text"></p>
+      </div>
+
+      <div class="modal-actions">
+        <button id="modal-copy-btn" class="submit-btn">
+          Copy URL
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="about-modal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>About</h2>
+        <button id="close-about-modal" class="icon-btn">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="modal-content">
+        <p style="margin-bottom: 1rem;">
+          This site visualizes the connections between books (~670,000 books)
+          through their "similar books" relationships.
+        </p>
+        <p style="margin-bottom: 1rem;">
+          All book connections are <strong>subjective</strong>. They are based
+          on what Goodreads users considered "similar books." The resulting network is messy,
+          but I think it is a fun way to find new books given two books you liked.
+        </p>
+        <p>
+          Data from the 
+          <a href="https://cseweb.ucsd.edu/~jmcauley/datasets/goodreads.html" 
+            target="_blank" rel="noopener noreferrer" 
+            style="color: var(--link-color); text-decoration: underline;">
+            UCSD Book Graph dataset
+          </a>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p>Loading books...</p>
+    </div>
+  </div>
+
+  <script src="src/js/graph.js"></script>
+  <script src="src/js/logic.js"></script>
+</body>
+</html>
