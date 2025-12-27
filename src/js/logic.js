@@ -627,6 +627,12 @@ function setupEventListeners() {
     }
   });
 
+  document.getElementById('legend-toggle').addEventListener('click', (e) => {
+    e.preventDefault();
+    const legend = document.querySelector('.legend');
+    legend.classList.toggle('collapsed');
+  });
+
   document.getElementById('about-link').addEventListener('click', (e) => {
     e.preventDefault();
     openAboutModal();
