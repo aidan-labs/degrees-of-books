@@ -7,6 +7,19 @@ let bookIndex = {
   allBooks: []
 };
 
+function updateLoadingProgress(current, total) {
+  const percentage = Math.round((current / total) * 100);
+  const progressBar = document.getElementById('loading-progress-bar');
+  const progressText = document.getElementById('loading-progress-text');
+  
+  if (progressBar) {
+    progressBar.style.width = `${percentage}%`;
+  }
+  if (progressText) {
+    progressText.textContent = `${percentage}%`;
+  }
+}
+
 async function loadBookData() {
   try {
     const files = [
@@ -20,14 +33,22 @@ async function loadBookData() {
     ];
 
     let allBooks = [];
+    const totalFiles = files.length;
 
-    for (const file of files) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      
+      // Update progress
+      updateLoadingProgress(i, totalFiles);
+      
       const response = await fetch(file);
       if (!response.ok) throw new Error(`Failed to fetch ${file}`);
       const data = await response.json();
       allBooks.push(...data.books);
       console.log(`Loaded ${file} (${data.books.length} books)`);
     }
+
+    updateLoadingProgress(totalFiles, totalFiles);
 
     bookData = { books: allBooks };
 
@@ -701,7 +722,9 @@ async function initialize() {
     setupEventListeners();
     loadFromURL();
     
-    loadingOverlay.classList.add('hidden');
+    setTimeout(() => {
+      loadingOverlay.classList.add('hidden');
+    }, 500);
   } catch (error) {
     console.error('Failed to initialize app:', error);
     loadingOverlay.innerHTML = `
