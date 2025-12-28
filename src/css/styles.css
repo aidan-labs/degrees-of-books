@@ -721,7 +721,7 @@ body {
 
 /* Progress Bar */
 .progress-container {
-  margin-top: 1.5rem;
+  margin-top: 0.5rem;
   width: 100%;
   max-width: 300px;
   display: flex;
